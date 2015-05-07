@@ -13,6 +13,7 @@ import org.neo4j.cypher.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -25,12 +26,12 @@ import org.neo4j.kernel.impl.util.StringLogger;
 public class BuildGraph {
     public enum NodeType implements Label
     {
-        Flight,TimePeriod, Airline, Origin, Destination, DeparturePerformance, ArrivalPerformance, CancellationsAndDiversions, FlightSummaries, CauseOfDelay, GateReturnInfoAtOrigin, DivertedAirportInfo;
+        Flight, Airport, Market, State, Carrier, Diverted, Cancelled, Cause;
     }
     
     public enum RelationType implements RelationshipType
     {
-        timePeriodOfFlight, BelongsTo, OriginatedFrom, DepartedTo ;
+        In_market, In_store, Origin, Destination, Cancelled_by, Diverted_by, Delayed_by, Operated_by
     }
     
     public BuildGraph()
@@ -80,18 +81,89 @@ public class BuildGraph {
                     //In here we need a top to bottom function of the length of the loop above, that takes each nextLine[] and writes to graph
                     
                     Node flight = graphDb.createNode(NodeType.Flight);
+                    Node airport = graphDb.createNode(NodeType.Airport);
+                    Node market = graphDb.createNode(NodeType.Market);
+                    Node state = graphDb.createNode(NodeType.State);
+                    Node carrier = graphDb.createNode(NodeType.Carrier);
+                    Node diverted = graphDb.createNode(NodeType.Diverted);
+                    Node cancelled = graphDb.createNode(NodeType.Cancelled);
+                    Node cause = graphDb.createNode(NodeType.Cause);
                     
+                    Relationship in_market = airport.createRelationshipTo(market, RelationType.In_market);
+                    Relationship in_store = airport.createRelationshipTo(state, RelationType.In_store);
+                    Relationship origin = flight.createRelationshipTo(airport, RelationType.Origin);
+                    Relationship destination = flight.createRelationshipTo(airport, RelationType.Destination);
+                    Relationship cancelled_by = flight.createRelationshipTo(cancelled, RelationType.Cancelled_by);
+                    Relationship diverted_by = flight.createRelationshipTo(diverted, RelationType.Diverted_by);
+                    Relationship delayed_by = flight.createRelationshipTo(cause, RelationType.Delayed_by);
+                    Relationship operated_by = flight.createRelationshipTo(carrier, RelationType.Operated_by);
                     
-                    Node timePeriodNode = graphDb.createNode(NodeType.TimePeriod);
-                    timePeriodNode.setProperty("Year", Integer.parseInt(nextLine[0]));
-                    timePeriodNode.setProperty("Quarter", Integer.parseInt(nextLine[1]));
-                    timePeriodNode.setProperty("Month", Integer.parseInt(nextLine[2]));
-                    timePeriodNode.setProperty("DayOfMonth", Integer.parseInt(nextLine[3]));
-                    timePeriodNode.setProperty("DayOfWeek", Integer.parseInt(nextLine[4]));
-                    timePeriodNode.setProperty("FlightDate", nextLine[5]);
+                    flight.setProperty("Year", Integer.parseInt(nextLine[0]));                    
+                    flight.setProperty("Quarter", Integer.parseInt(nextLine[1]));
+                    flight.setProperty("Month", Integer.parseInt(nextLine[2]));
+                    flight.setProperty("DayOfMonth", Integer.parseInt(nextLine[3]));
+                    flight.setProperty("DayOfWeek", Integer.parseInt(nextLine[4]));
+                    flight.setProperty("FlightDate", nextLine[5]);
                     
-                    timePeriodNode.createRelationshipTo(flight, RelationType.timePeriodOfFlight);
+                    UniqueCarrier
+                    AirlineID
+                    Carrier
+                    TailNum
+                    FlightNum
+                    OriginAirportID
+                    OriginAirportSeqID
+                    OriginCityMarketID
+                    Origin
+                    OriginCityName
+                    OriginState
+                    OriginStateFips
+                    OriginStateName
+                    OriginWac
+                    DestAirportID
+                    DestAirpotSeqID
+                    DestCityMarketID
+                    Dest
+                    DestCityName
+                    DestState
+                    DestStateFips
+                    DestStateName
+                    DestWac
+                    CRSDepTime
+                    DepDelay
+                    DepDelayMinutes
+                    DepDel15
+                    DepartureDelayGroups
+                    DepTimeBlk
+                    TaxiOut
+                    WheelsOff
+                    WheelsOn
+                    TaxiIn
+                    CRSArrTime
+                    ArrTime
+                    ArrDelay
+                    ArrDelayMinutes
+                    ArrDel15
+                    ArrivalDelayGroups
+                    ArrTimeBlk
+                    Cancelled
+                    CancellationCode
+                    Diverted
+                    CRSElapsedTime
+                    ActualElapsedTime
+                    AirTime
+                    Flights
+                    Distance
+                    DistanceGroup
                     
+                    CarrierDelay
+                    WeatherDelay
+                    NASDelay
+                    SecurityDelay
+                    LateAircraftDelay
+                    FirstDepTime
+                    TotalAddGTime
+                    LongestAddGTime
+                            
                     
                     tx.success();
                 }   
