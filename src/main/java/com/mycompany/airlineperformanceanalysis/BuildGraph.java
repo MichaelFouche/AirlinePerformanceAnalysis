@@ -109,88 +109,88 @@ public class BuildGraph {
                     carrier.setProperty("AirlineID" , Integer.parseInt(nextLine[7]));
                     carrier.setProperty("Carrier", nextLine[8]); 
                             
-                    flight.setProperty("TailNum" , nextLine[6]); 
-                    flight.setProperty("FlightNum" , Integer.parseInt(nextLine[7]));
+                    flight.setProperty("TailNum" , nextLine[9]); 
+                    flight.setProperty("FlightNum" , Integer.parseInt(nextLine[10]));
                     
-                    airport.setProperty("OriginAirportID", Integer.parseInt(nextLine[7]));
-                    airport.setProperty("OriginAirportSeqID", Integer.parseInt(nextLine[7]));
+                    airport.setProperty("OriginAirportID", Integer.parseInt(nextLine[11]));
+                    airport.setProperty("OriginAirportSeqID", Integer.parseInt(nextLine[12]));
                             
-                    market.setProperty("OriginCityMarketID", Integer.parseInt(nextLine[7]));
-                    market.setProperty("Origin", nextLine[6]); 
-                    market.setProperty("OriginCityName", nextLine[6]); 
+                    market.setProperty("OriginCityMarketID", Integer.parseInt(nextLine[13]));
+                    market.setProperty("Origin", nextLine[17]); 
+                    market.setProperty("OriginCityName", nextLine[15]); 
                             
-                    state.setProperty("OriginState", nextLine[6]); 
-                    state.setProperty("OriginStateFips", Integer.parseInt(nextLine[7]));
-                    state.setProperty("OriginStateName", nextLine[6]); 
+                    state.setProperty("OriginState", nextLine[16]); 
+                    state.setProperty("OriginStateFips", Integer.parseInt(nextLine[17]));
+                    state.setProperty("OriginStateName", nextLine[18]); 
                             
-                    market.setProperty("OriginWac", Integer.parseInt(nextLine[7]));
+                    market.setProperty("OriginWac", Integer.parseInt(nextLine[19]));
                     
-                    airport.setProperty("DestAirportID", Integer.parseInt(nextLine[7]));
-                    airport.setProperty("DestAirpotSeqID", Integer.parseInt(nextLine[7]));
+                    airport.setProperty("DestAirportID", Integer.parseInt(nextLine[20]));
+                    airport.setProperty("DestAirpotSeqID", Integer.parseInt(nextLine[21]));
                     
-                    market.setProperty("DestCityMarketID", Integer.parseInt(nextLine[7]));
-                    market.setProperty("Dest", nextLine[6]); 
-                    market.setProperty("DestCityName", nextLine[6]); 
+                    market.setProperty("DestCityMarketID", Integer.parseInt(nextLine[22]));
+                    market.setProperty("Dest", nextLine[23]); 
+                    market.setProperty("DestCityName", nextLine[24]); 
                     
-                    state.setProperty("DestState", nextLine[6]); 
-                    state.setProperty("DestStateFips", Integer.parseInt(nextLine[7]));
-                    state.setProperty("DestStateName", nextLine[6]); 
+                    state.setProperty("DestState", nextLine[25]); 
+                    state.setProperty("DestStateFips", Integer.parseInt(nextLine[26]));
+                    state.setProperty("DestStateName", nextLine[27]); 
                     
-                    market.setProperty("DestWac", Integer.parseInt(nextLine[7]));
+                    market.setProperty("DestWac", Integer.parseInt(nextLine[28]));
                     
-                    destination.setProperty("CRSDepTime", nextLine[7]);
-                    destination.setProperty("DepTime", nextLine[7]);
+                    destination.setProperty("CRSDepTime", nextLine[29]);
+                    destination.setProperty("DepTime", nextLine[30]);
                     
-                    delayed_by.setProperty("DepDelay", Integer.parseInt(nextLine[7]));
-                    delayed_by.setProperty("DepDelayMinutes", Integer.parseInt(nextLine[7]));
-                    delayed_by.setProperty("DepDel15", Integer.parseInt(nextLine[7]));
-                    delayed_by.setProperty("DepartureDelayGroups", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("DepDelay", Integer.parseInt(nextLine[31]));
+                    delayed_by.setProperty("DepDelayMinutes", Integer.parseInt(nextLine[32]));
+                    delayed_by.setProperty("DepDel15", Integer.parseInt(nextLine[33]));
+                    delayed_by.setProperty("DepartureDelayGroups", Integer.parseInt(nextLine[34]));
                     
-                    destination.setProperty("DepTimeBlk", nextLine[7]);
-                    destination.setProperty("TaxiOut", Integer.parseInt(nextLine[7]));
-                    destination.setProperty("WheelsOff", nextLine[7]);
+                    destination.setProperty("DepTimeBlk", nextLine[35]);
+                    destination.setProperty("TaxiOut", Integer.parseInt(nextLine[36]));
+                    destination.setProperty("WheelsOff", nextLine[37]);
                     
-                    origin.setProperty("WheelsOn", nextLine[7]);
-                    origin.setProperty("TaxiIn", Integer.parseInt(nextLine[7]));
-                    origin.setProperty("CRSArrTime", nextLine[7]);
-                    origin.setProperty("ArrTime", nextLine[7]);
+                    origin.setProperty("WheelsOn", nextLine[38]);
+                    origin.setProperty("TaxiIn", Integer.parseInt(nextLine[39]));
+                    origin.setProperty("CRSArrTime", nextLine[40]);
+                    origin.setProperty("ArrTime", nextLine[41]);
                     
-                    delayed_by.setProperty("ArrDelay", Integer.parseInt(nextLine[7]));
-                    delayed_by.setProperty("ArrDelayMinutes", Integer.parseInt(nextLine[7]));
-                    delayed_by.setProperty("ArrDel15", Integer.parseInt(nextLine[7]));
-                    delayed_by.setProperty("ArrivalDelayGroups", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("ArrDelay", Integer.parseInt(nextLine[42]));
+                    delayed_by.setProperty("ArrDelayMinutes", Integer.parseInt(nextLine[43]));
+                    delayed_by.setProperty("ArrDel15", Integer.parseInt(nextLine[44]));
+                    delayed_by.setProperty("ArrivalDelayGroups", Integer.parseInt(nextLine[45]));
                     
-                    origin.setProperty("ArrTimeBlk", nextLine[7]);
+                    origin.setProperty("ArrTimeBlk", nextLine[46]);
                     
-                    cancelled.setProperty("Cancelled", Integer.parseInt(nextLine[7]));
-                    cancelled.setProperty("CancellationCode", nextLine[7]);
+                    cancelled.setProperty("Cancelled", Integer.parseInt(nextLine[47]));
+                    cancelled.setProperty("CancellationCode", nextLine[48]);
                             
-                    diverted.setProperty("Diverted", Integer.parseInt(nextLine[7]));
+                    diverted.setProperty("Diverted", Integer.parseInt(nextLine[49]));
                             
-                    flight.setProperty("CRSElapsedTime", Integer.parseInt(nextLine[7]));
-                    flight.setProperty("ActualElapsedTime", Integer.parseInt(nextLine[7]));
-                    flight.setProperty("AirTime", Integer.parseInt(nextLine[7]));
-                    flight.setProperty("Flights", Integer.parseInt(nextLine[7]));
-                    flight.setProperty("Distance", Integer.parseInt(nextLine[7]));
-                    flight.setProperty("DistanceGroup", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("CRSElapsedTime", Integer.parseInt(nextLine[50]));
+                    flight.setProperty("ActualElapsedTime", Integer.parseInt(nextLine[51]));
+                    flight.setProperty("AirTime", Integer.parseInt(nextLine[52]));
+                    flight.setProperty("Flights", Integer.parseInt(nextLine[53]));
+                    flight.setProperty("Distance", Integer.parseInt(nextLine[54]));
+                    flight.setProperty("DistanceGroup", Integer.parseInt(nextLine[55]));
                     
-                    if(Integer.parseInt(nextLine[7])==1)
+                    if(Integer.parseInt(nextLine[56])==1)
                     {
                         cause.setProperty("Cause", "CarrierDelay");
                     }
-                    else if(Integer.parseInt(nextLine[7])==1)
+                    else if(Integer.parseInt(nextLine[57])==1)
                     {
                         cause.setProperty("Cause", "NASDelay");
                     }
-                    else if(Integer.parseInt(nextLine[7])==1)
+                    else if(Integer.parseInt(nextLine[58])==1)
                     {
                         cause.setProperty("Cause", "SecurityDelay");
                     }
-                    else if(Integer.parseInt(nextLine[7])==1)
+                    else if(Integer.parseInt(nextLine[59])==1)
                     {
                         cause.setProperty("Cause", "LateAircraftDelay");
                     }
-                    else if(Integer.parseInt(nextLine[7])==1)
+                    else if(Integer.parseInt(nextLine[60])==1)
                     {
                         cause.setProperty("Cause", "LateAircraftDelay");
                     }
@@ -200,9 +200,9 @@ public class BuildGraph {
                     }
                     
                     
-                    flight.setProperty("FirstDepTime", Integer.parseInt(nextLine[7]));
-                    flight.setProperty("TotalAddGTime", Integer.parseInt(nextLine[7]));
-                    flight.setProperty("LongestAddGTime", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("FirstDepTime", Integer.parseInt(nextLine[61]));
+                    flight.setProperty("TotalAddGTime", Integer.parseInt(nextLine[62]));
+                    flight.setProperty("LongestAddGTime", Integer.parseInt(nextLine[63]));
                             
                     
                     tx.success();
