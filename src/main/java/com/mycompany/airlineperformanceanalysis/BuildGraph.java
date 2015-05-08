@@ -105,64 +105,104 @@ public class BuildGraph {
                     flight.setProperty("DayOfWeek", Integer.parseInt(nextLine[4]));
                     flight.setProperty("FlightDate", nextLine[5]);
                     
-                    UniqueCarrier
-                    AirlineID
-                    Carrier
-                    TailNum
-                    FlightNum
-                    OriginAirportID
-                    OriginAirportSeqID
-                    OriginCityMarketID
-                    Origin
-                    OriginCityName
-                    OriginState
-                    OriginStateFips
-                    OriginStateName
-                    OriginWac
-                    DestAirportID
-                    DestAirpotSeqID
-                    DestCityMarketID
-                    Dest
-                    DestCityName
-                    DestState
-                    DestStateFips
-                    DestStateName
-                    DestWac
-                    CRSDepTime
-                    DepDelay
-                    DepDelayMinutes
-                    DepDel15
-                    DepartureDelayGroups
-                    DepTimeBlk
-                    TaxiOut
-                    WheelsOff
-                    WheelsOn
-                    TaxiIn
-                    CRSArrTime
-                    ArrTime
-                    ArrDelay
-                    ArrDelayMinutes
-                    ArrDel15
-                    ArrivalDelayGroups
-                    ArrTimeBlk
-                    Cancelled
-                    CancellationCode
-                    Diverted
-                    CRSElapsedTime
-                    ActualElapsedTime
-                    AirTime
-                    Flights
-                    Distance
-                    DistanceGroup
+                    carrier.setProperty("UniqueCarrier", nextLine[6]); 
+                    carrier.setProperty("AirlineID" , Integer.parseInt(nextLine[7]));
+                    carrier.setProperty("Carrier", nextLine[8]); 
+                            
+                    flight.setProperty("TailNum" , nextLine[6]); 
+                    flight.setProperty("FlightNum" , Integer.parseInt(nextLine[7]));
                     
-                    CarrierDelay
-                    WeatherDelay
-                    NASDelay
-                    SecurityDelay
-                    LateAircraftDelay
-                    FirstDepTime
-                    TotalAddGTime
-                    LongestAddGTime
+                    airport.setProperty("OriginAirportID", Integer.parseInt(nextLine[7]));
+                    airport.setProperty("OriginAirportSeqID", Integer.parseInt(nextLine[7]));
+                            
+                    market.setProperty("OriginCityMarketID", Integer.parseInt(nextLine[7]));
+                    market.setProperty("Origin", nextLine[6]); 
+                    market.setProperty("OriginCityName", nextLine[6]); 
+                            
+                    state.setProperty("OriginState", nextLine[6]); 
+                    state.setProperty("OriginStateFips", Integer.parseInt(nextLine[7]));
+                    state.setProperty("OriginStateName", nextLine[6]); 
+                            
+                    market.setProperty("OriginWac", Integer.parseInt(nextLine[7]));
+                    
+                    airport.setProperty("DestAirportID", Integer.parseInt(nextLine[7]));
+                    airport.setProperty("DestAirpotSeqID", Integer.parseInt(nextLine[7]));
+                    
+                    market.setProperty("DestCityMarketID", Integer.parseInt(nextLine[7]));
+                    market.setProperty("Dest", nextLine[6]); 
+                    market.setProperty("DestCityName", nextLine[6]); 
+                    
+                    state.setProperty("DestState", nextLine[6]); 
+                    state.setProperty("DestStateFips", Integer.parseInt(nextLine[7]));
+                    state.setProperty("DestStateName", nextLine[6]); 
+                    
+                    market.setProperty("DestWac", Integer.parseInt(nextLine[7]));
+                    
+                    destination.setProperty("CRSDepTime", nextLine[7]);
+                    destination.setProperty("DepTime", nextLine[7]);
+                    
+                    delayed_by.setProperty("DepDelay", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("DepDelayMinutes", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("DepDel15", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("DepartureDelayGroups", Integer.parseInt(nextLine[7]));
+                    
+                    destination.setProperty("DepTimeBlk", nextLine[7]);
+                    destination.setProperty("TaxiOut", Integer.parseInt(nextLine[7]));
+                    destination.setProperty("WheelsOff", nextLine[7]);
+                    
+                    origin.setProperty("WheelsOn", nextLine[7]);
+                    origin.setProperty("TaxiIn", Integer.parseInt(nextLine[7]));
+                    origin.setProperty("CRSArrTime", nextLine[7]);
+                    origin.setProperty("ArrTime", nextLine[7]);
+                    
+                    delayed_by.setProperty("ArrDelay", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("ArrDelayMinutes", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("ArrDel15", Integer.parseInt(nextLine[7]));
+                    delayed_by.setProperty("ArrivalDelayGroups", Integer.parseInt(nextLine[7]));
+                    
+                    origin.setProperty("ArrTimeBlk", nextLine[7]);
+                    
+                    cancelled.setProperty("Cancelled", Integer.parseInt(nextLine[7]));
+                    cancelled.setProperty("CancellationCode", nextLine[7]);
+                            
+                    diverted.setProperty("Diverted", Integer.parseInt(nextLine[7]));
+                            
+                    flight.setProperty("CRSElapsedTime", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("ActualElapsedTime", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("AirTime", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("Flights", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("Distance", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("DistanceGroup", Integer.parseInt(nextLine[7]));
+                    
+                    if(Integer.parseInt(nextLine[7])==1)
+                    {
+                        cause.setProperty("Cause", "CarrierDelay");
+                    }
+                    else if(Integer.parseInt(nextLine[7])==1)
+                    {
+                        cause.setProperty("Cause", "NASDelay");
+                    }
+                    else if(Integer.parseInt(nextLine[7])==1)
+                    {
+                        cause.setProperty("Cause", "SecurityDelay");
+                    }
+                    else if(Integer.parseInt(nextLine[7])==1)
+                    {
+                        cause.setProperty("Cause", "LateAircraftDelay");
+                    }
+                    else if(Integer.parseInt(nextLine[7])==1)
+                    {
+                        cause.setProperty("Cause", "LateAircraftDelay");
+                    }
+                    else
+                    {
+                        cause.setProperty("Cause", "Unknown");
+                    }
+                    
+                    
+                    flight.setProperty("FirstDepTime", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("TotalAddGTime", Integer.parseInt(nextLine[7]));
+                    flight.setProperty("LongestAddGTime", Integer.parseInt(nextLine[7]));
                             
                     
                     tx.success();
