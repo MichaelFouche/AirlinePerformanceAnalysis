@@ -87,7 +87,7 @@ public class Main {
         try(Transaction tx = graphDb.beginTx())
         {  
             System.out.println("Reading Graph");
-            String query = "MATCH (n:TimePeriod) RETURN n";
+            String query = "MATCH (n:Flight) RETURN n";
             ExecutionResult result = engine.execute(query);
             scala.collection.Iterator<Object> objResult = result.columnAs("n");
 
