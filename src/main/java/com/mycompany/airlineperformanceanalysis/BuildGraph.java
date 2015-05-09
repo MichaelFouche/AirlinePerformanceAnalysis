@@ -31,7 +31,7 @@ public class BuildGraph {
     
     public enum RelationType implements RelationshipType
     {
-        In_market, In_store, Origin, Destination, Cancelled_by, Diverted_by, Delayed_by, Operated_by
+        In_market, In_state, Origin, Destination, Cancelled_by, Diverted_by, Delayed_by, Operated_by
     }
     
     public BuildGraph()
@@ -49,7 +49,7 @@ public class BuildGraph {
         //ExecutionResult result;
         try(Transaction tx = graphDb.beginTx())
         {//Clear the database
-             engine.execute("match (n) optional match (n)-[r]-() delete n,r");
+             engine.execute("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r");//match (n) optional match (n)-[r]-() delete n,r");
         }
         graphDb.shutdown();
         System.out.println("Cleared the database");
@@ -86,120 +86,112 @@ public class BuildGraph {
                     
                     
                     Node flight = graphDb.createNode(NodeType.Flight);
-                    Node airport = graphDb.createNode(NodeType.Airport);
-                    Node market = graphDb.createNode(NodeType.Market);
-                    Node state = graphDb.createNode(NodeType.State);
+                    Node oAirport = graphDb.createNode(NodeType.Airport);
+                    Node dAirport = graphDb.createNode(NodeType.Airport);
+                    Node oMarket = graphDb.createNode(NodeType.Market);
+                    Node dMarket = graphDb.createNode(NodeType.Market);
+                    Node oState = graphDb.createNode(NodeType.State);
+                    Node dState = graphDb.createNode(NodeType.State);
                     Node carrier = graphDb.createNode(NodeType.Carrier);
-                    Node diverted = graphDb.createNode(NodeType.Diverted);
-                    Node cancelled = graphDb.createNode(NodeType.Cancelled);
+                    
                     Node cause = graphDb.createNode(NodeType.Cause);
                     
-                    Relationship in_market = airport.createRelationshipTo(market, RelationType.In_market);
-                    Relationship in_store = airport.createRelationshipTo(state, RelationType.In_store);
-                    Relationship origin = flight.createRelationshipTo(airport, RelationType.Origin);
-                    Relationship destination = flight.createRelationshipTo(airport, RelationType.Destination);
-                    Relationship cancelled_by = flight.createRelationshipTo(cancelled, RelationType.Cancelled_by);
-                    Relationship diverted_by = flight.createRelationshipTo(diverted, RelationType.Diverted_by);
-                    Relationship delayed_by = flight.createRelationshipTo(cause, RelationType.Delayed_by);
+                    Relationship oIn_market = oAirport.createRelationshipTo(oMarket, RelationType.In_market);
+                    Relationship dIn_market = dAirport.createRelationshipTo(dMarket, RelationType.In_market);
+                    Relationship oIn_state = oAirport.createRelationshipTo(oState, RelationType.In_state);
+                    Relationship dIn_state = dAirport.createRelationshipTo(dState, RelationType.In_state);
+                    Relationship origin = flight.createRelationshipTo(oAirport, RelationType.Origin);
+                    Relationship destination = flight.createRelationshipTo(dAirport, RelationType.Destination) ;
+                    Relationship oDelayed_by = flight.createRelationshipTo(cause, RelationType.Delayed_by);
+                    Relationship dDelayed_by = flight.createRelationshipTo(cause, RelationType.Delayed_by);
                     Relationship operated_by = flight.createRelationshipTo(carrier, RelationType.Operated_by);
                     
+                    //flight
                     String Year = (nextLine[0]);
                     String Quarter = (nextLine[1]);
                     String Month = (nextLine[2]);      
                     String DayOfMonth = (nextLine[3]);       
                     String DayOfWeek = (nextLine[4]);      
                     String FlightDate = (nextLine[5]);
-                    
-                    
+                    String TailNum = nextLine[9];
+                    String FlightNum = nextLine[10];                     
                     if(!Year.equals("")&&!Year.equals("0"))flight.setProperty("Year", Integer.parseInt(Year));  
                     if(!Quarter.equals("")&&!Quarter.equals("0"))flight.setProperty("Quarter", Integer.parseInt(Quarter));
                     if(!Month.equals("")&&!Month.equals("0"))flight.setProperty("Month", Integer.parseInt(Month));
                     if(!DayOfMonth.equals("")&&!DayOfMonth.equals("0"))flight.setProperty("DayOfMonth", Integer.parseInt(DayOfMonth));
                     if(!DayOfWeek.equals("")&&!DayOfWeek.equals("0"))flight.setProperty("DayOfWeek", Integer.parseInt(DayOfWeek));
-                    if(!FlightDate.equals("")&&!FlightDate.equals("0"))flight.setProperty("FlightDate",FlightDate);
-                    
+                    if(!FlightDate.equals("")&&!FlightDate.equals("0"))flight.setProperty("FlightDate",FlightDate);                                               
+                    if(!TailNum.equals("")&&!TailNum.equals("0"))flight.setProperty("TailNum" , TailNum); 
+                    if(!FlightNum.equals("")&&!FlightNum.equals("0"))flight.setProperty("FlightNum" , Integer.parseInt(FlightNum));
+                   
+                    //carrier
                     String UniqueCarrier = nextLine[6];
                     String AirlineID = nextLine[7];
-                    String Carrier = nextLine[8];  
-                            
+                    String Carrier = nextLine[8];                              
                     if(!UniqueCarrier.equals("")&&!UniqueCarrier.equals("0"))carrier.setProperty("UniqueCarrier", UniqueCarrier); 
                     if(!AirlineID.equals("")&&!AirlineID.equals("0"))carrier.setProperty("AirlineID" , Integer.parseInt(AirlineID));
                     if(!Carrier.equals("")&&!Carrier.equals("0"))carrier.setProperty("Carrier", Carrier); 
                     
-                    String TailNum = nextLine[9];
-                    String FlightNum = nextLine[10];
-                            
-                    if(!TailNum.equals("")&&!TailNum.equals("0"))flight.setProperty("TailNum" , TailNum); 
-                    if(!FlightNum.equals("")&&!FlightNum.equals("0"))flight.setProperty("FlightNum" , Integer.parseInt(FlightNum));
-                    
+                    //Airport                    
                     String OriginAirportID = nextLine[11];
                     String OriginAirportSeqID = nextLine[12];
-                            
-                    if(!OriginAirportID.equals("")&&!OriginAirportID.equals("0"))airport.setProperty("OriginAirportID", Integer.parseInt(OriginAirportID));
-                    if(!OriginAirportSeqID.equals("")&&!OriginAirportSeqID.equals("0"))airport.setProperty("OriginAirportSeqID", Integer.parseInt(OriginAirportSeqID));
-                    
-                    String OriginCityMarketID = nextLine[13];
                     String Origin = nextLine[14];
-                    String OriginCityName  = nextLine[15];
-                            
-                    if(!OriginCityMarketID.equals("")&&!OriginCityMarketID.equals("0"))market.setProperty("OriginCityMarketID", Integer.parseInt(OriginCityMarketID));
-                    if(!Origin.equals("")&&!Origin.equals("0"))market.setProperty("Origin", Origin); 
-                    if(!OriginCityName.equals("")&&!OriginCityName.equals("0"))market.setProperty("OriginCityName", OriginCityName); 
-                       
+                    String DestAirportID = nextLine[20];
+                    String DestAirpotSeqID = nextLine[21];                    
+                    String Dest = nextLine[23];
+                    if(!OriginAirportID.equals("")&&!OriginAirportID.equals("0"))oAirport.setProperty("OriginAirportID", Integer.parseInt(OriginAirportID));
+                    if(!OriginAirportSeqID.equals("")&&!OriginAirportSeqID.equals("0"))oAirport.setProperty("OriginAirportSeqID", Integer.parseInt(OriginAirportSeqID)); 
+                    if(!Origin.equals("")&&!Origin.equals("0"))oAirport.setProperty("Origin", Origin); 
+                    if(!DestAirportID.equals("")&&!DestAirportID.equals("0"))dAirport.setProperty("DestAirportID", Integer.parseInt(DestAirportID));
+                    if(!DestAirpotSeqID.equals("")&&!DestAirpotSeqID.equals("0"))dAirport.setProperty("DestAirpotSeqID", Integer.parseInt(DestAirpotSeqID));
+                    if(!Dest.equals("")&&!Dest.equals("0"))dAirport.setProperty("Dest", Dest); 
+                    
+                    //marketOrigin
+                    String OriginCityMarketID = nextLine[13];                    
+                    String OriginCityName  = nextLine[15]; 
+                    String OriginWac = nextLine[19];  
+                    if(!OriginCityMarketID.equals("")&&!OriginCityMarketID.equals("0"))oMarket.setProperty("OriginCityMarketID", Integer.parseInt(OriginCityMarketID));                    
+                    if(!OriginCityName.equals("")&&!OriginCityName.equals("0"))oMarket.setProperty("OriginCityName", OriginCityName);                                               
+                    if(!OriginWac.equals("")&&!OriginWac.equals("0"))oMarket.setProperty("OriginWac", Integer.parseInt(OriginWac));
+                    
+                    //marketDestination
+                    String DestCityMarketID = nextLine[22];
+                    String DestCityName = nextLine[24];  
+                    String DestWac = nextLine[50]; 
+                    if(!DestCityMarketID.equals("")&&!DestCityMarketID.equals("0"))dMarket.setProperty("DestCityMarketID", Integer.parseInt(DestCityMarketID));
+                   
+                    if(!DestCityName.equals("")&&!DestCityName.equals("0"))dMarket.setProperty("DestCityName", DestCityName);   
+                    if(!DestWac.equals("")&&!DestWac.equals("0"))dMarket.setProperty("DestWac", Integer.parseInt(DestWac));
+                    
+                    //stateOrigin
                     String OriginState = nextLine[16];
                     String OriginStateFips = nextLine[17];     
-                    String OriginStateName = nextLine[18];
-                    
-                    if(!OriginState.equals("")&&!OriginState.equals("0"))state.setProperty("OriginState", OriginState); 
-                    if(!OriginStateFips.equals("")&&!OriginStateFips.equals("0"))state.setProperty("OriginStateFips", Integer.parseInt(OriginStateFips));
-                    if(!OriginStateName.equals("")&&!OriginStateName.equals("0"))state.setProperty("OriginStateName", OriginStateName); 
-                    
-                    String OriginWac = nextLine[19];
-                            
-                    if(!OriginWac.equals("")&&!OriginWac.equals("0"))market.setProperty("OriginWac", Integer.parseInt(OriginWac));
-                    
-                    String DestAirportID = nextLine[20];
-                    String DestAirpotSeqID = nextLine[21];
-                    
-                    if(!DestAirportID.equals("")&&!DestAirportID.equals("0"))airport.setProperty("DestAirportID", Integer.parseInt(DestAirportID));
-                    if(!DestAirpotSeqID.equals("")&&!DestAirpotSeqID.equals("0"))airport.setProperty("DestAirpotSeqID", Integer.parseInt(DestAirpotSeqID));
-                    
-                    String DestCityMarketID = nextLine[22];
-                    String Dest = nextLine[23];
-                    String DestCityName = nextLine[24];
-                    
-                    if(!DestCityMarketID.equals("")&&!DestCityMarketID.equals("0"))market.setProperty("DestCityMarketID", Integer.parseInt(DestCityMarketID));
-                    if(!Dest.equals("")&&!Dest.equals("0"))market.setProperty("Dest", Dest); 
-                    if(!DestCityName.equals("")&&!DestCityName.equals("0"))market.setProperty("DestCityName", DestCityName); 
-                    
+                    String OriginStateName = nextLine[18];                    
+                    if(!OriginState.equals("")&&!OriginState.equals("0"))oState.setProperty("OriginState", OriginState); 
+                    if(!OriginStateFips.equals("")&&!OriginStateFips.equals("0"))oState.setProperty("OriginStateFips", Integer.parseInt(OriginStateFips));
+                    if(!OriginStateName.equals("")&&!OriginStateName.equals("0"))oState.setProperty("OriginStateName", OriginStateName); 
+                     
+                    //stateDestination
                     String DestState = nextLine[25];
                     String DestStateFips = nextLine[26];
                     String DestStateName = nextLine[27];
+                    if(!DestState.equals("")&&!DestState.equals("0"))dState.setProperty("DestState", DestState); 
+                    if(!DestStateFips.equals("")&&!DestStateFips.equals("0"))dState.setProperty("DestStateFips", Integer.parseInt(DestStateFips));
+                    if(!DestStateName.equals("")&&!DestStateName.equals("0"))dState.setProperty("DestStateName", DestStateName); 
                     
-                    if(!DestState.equals("")&&!DestState.equals("0"))state.setProperty("DestState", DestState); 
-                    if(!DestStateFips.equals("")&&!DestStateFips.equals("0"))state.setProperty("DestStateFips", Integer.parseInt(DestStateFips));
-                    if(!DestStateName.equals("")&&!DestStateName.equals("0"))state.setProperty("DestStateName", DestStateName); 
-                    
-                    String DestWac = nextLine[50];
-                    
-                    if(!DestWac.equals("")&&!DestWac.equals("0"))market.setProperty("DestWac", Integer.parseInt(DestWac));
-                    
-                    String CRSDepTime = nextLine[29];
-                    String DepTime = nextLine[30];
-                    
-                    if(!CRSDepTime.equals("")&&!CRSDepTime.equals("0"))destination.setProperty("CRSDepTime", CRSDepTime);
-                    if(!DepTime.equals("")&&!DepTime.equals("0")) destination.setProperty("DepTime", DepTime);
-                    
+                                        
+                    //delayed by origin
                     String DepDelay = nextLine[31];
                     String DepDelayMinutes = nextLine[32];       
                     String DepDel15 = nextLine[33];        
                     String DepartureDelayGroups = nextLine[34];         
                     
-                    if(!DepDelay.equals("")&&!DepDelay.equals("0"))delayed_by.setProperty("DepDelay", Integer.parseInt(DepDelay));
-                    if(!DepDelayMinutes.equals("")&&!DepDelayMinutes.equals("0"))delayed_by.setProperty("DepDelayMinutes", Integer.parseInt(DepDelayMinutes));
-                    if(!DepDel15.equals("")&&!DepDel15.equals("0"))delayed_by.setProperty("DepDel15", Integer.parseInt(DepDel15));
-                    if(!DepartureDelayGroups.equals("")&&!DepartureDelayGroups.equals("0"))delayed_by.setProperty("DepartureDelayGroups", Integer.parseInt(DepartureDelayGroups));
+                    if(!DepDelay.equals("")&&!DepDelay.equals("0"))oDelayed_by.setProperty("DepDelay", Integer.parseInt(DepDelay));
+                    if(!DepDelayMinutes.equals("")&&!DepDelayMinutes.equals("0"))oDelayed_by.setProperty("DepDelayMinutes", Integer.parseInt(DepDelayMinutes));
+                    if(!DepDel15.equals("")&&!DepDel15.equals("0"))oDelayed_by.setProperty("DepDel15", Integer.parseInt(DepDel15));
+                    if(!DepartureDelayGroups.equals("")&&!DepartureDelayGroups.equals("0"))oDelayed_by.setProperty("DepartureDelayGroups", Integer.parseInt(DepartureDelayGroups));
                     
+                    //destination
                     String DepTimeBlk = nextLine[35];
                     String TaxiOut = nextLine[36];
                     String WheelsOff = nextLine[37];
@@ -208,39 +200,51 @@ public class BuildGraph {
                     if(!TaxiOut.equals("")&&!TaxiOut.equals("0"))destination.setProperty("TaxiOut", Integer.parseInt(TaxiOut));
                     if(!WheelsOff.equals("")&&!WheelsOff.equals("0"))destination.setProperty("WheelsOff", WheelsOff);
                     
+                    //origin
                     String WheelsOn = nextLine[38];
                     String TaxiIn = nextLine[39];
                     String CRSArrTime  = nextLine[40];
                     String ArrTime = nextLine[41];
-                    
+                    String ArrTimeBlk = nextLine[46];
                     if(!WheelsOn.equals("")&&!WheelsOn.equals("0"))origin.setProperty("WheelsOn", WheelsOn);
                     if(!TaxiIn.equals("")&&!TaxiIn.equals("0"))origin.setProperty("TaxiIn", Integer.parseInt(TaxiIn));
                     if(!CRSArrTime.equals("")&&!CRSArrTime.equals("0"))origin.setProperty("CRSArrTime", CRSArrTime);
-                    if(!ArrTime.equals("")&&!ArrTime.equals("0"))origin.setProperty("ArrTime", ArrTime);
+                    if(!ArrTime.equals("")&&!ArrTime.equals("0"))origin.setProperty("ArrTime", ArrTime);                                        
+                    if(!ArrTimeBlk.equals("")&&!ArrTimeBlk.equals("0"))origin.setProperty("ArrTimeBlk", ArrTimeBlk);
                     
                     String ArrDelay = nextLine[42];
                     String ArrDelayMinutes = nextLine[43];
                     String ArrDel15 = nextLine[44];
                     String ArrivalDelayGroups = nextLine[45];
                     
-                    if(!ArrDelay.equals("")&&!ArrDelay.equals("0"))delayed_by.setProperty("ArrDelay", Integer.parseInt(ArrDelay));
-                    if(!ArrDelayMinutes.equals("")&&!ArrDelayMinutes.equals("0"))delayed_by.setProperty("ArrDelayMinutes", Integer.parseInt(ArrDelayMinutes));
-                    if(!ArrDel15.equals("")&&!ArrDel15.equals("0"))delayed_by.setProperty("ArrDel15", Integer.parseInt(ArrDel15));
-                    if(!ArrivalDelayGroups.equals("")&&!ArrivalDelayGroups.equals("0"))delayed_by.setProperty("ArrivalDelayGroups", Integer.parseInt(ArrivalDelayGroups));
+                    //delayed by destination
+                    if(!ArrDelay.equals("")&&!ArrDelay.equals("0"))dDelayed_by.setProperty("ArrDelay", Integer.parseInt(ArrDelay));
+                    if(!ArrDelayMinutes.equals("")&&!ArrDelayMinutes.equals("0"))dDelayed_by.setProperty("ArrDelayMinutes", Integer.parseInt(ArrDelayMinutes));
+                    if(!ArrDel15.equals("")&&!ArrDel15.equals("0"))dDelayed_by.setProperty("ArrDel15", Integer.parseInt(ArrDel15));
+                    if(!ArrivalDelayGroups.equals("")&&!ArrivalDelayGroups.equals("0"))dDelayed_by.setProperty("ArrivalDelayGroups", Integer.parseInt(ArrivalDelayGroups));
                     
-                    String ArrTimeBlk = nextLine[46];
                     
-                    if(!ArrTimeBlk.equals("")&&!ArrTimeBlk.equals("0"))origin.setProperty("ArrTimeBlk", ArrTimeBlk);
+                    
                     
                     String Cancelled = nextLine[47];
                     String CancellationCode = nextLine[48];
                     
-                    if(!Cancelled.equals("")&&!Cancelled.equals("0"))cancelled.setProperty("Cancelled", Integer.parseInt(Cancelled));
-                    if(!CancellationCode.equals("")&&!CancellationCode.equals("0"))cancelled.setProperty("CancellationCode", CancellationCode);
+                    if(!Cancelled.equals("")&&!Cancelled.equals("0")){
+                        Node cancelled = graphDb.createNode(NodeType.Cancelled);
+                        Relationship cancelled_by = flight.createRelationshipTo(cancelled, RelationType.Cancelled_by);
+                        cancelled.setProperty("Cancelled", Integer.parseInt(Cancelled));
+                        if(!CancellationCode.equals("")&&!CancellationCode.equals("0"))cancelled.setProperty("CancellationCode", CancellationCode);
+                    }
+                    
                      
                     String Diverted = nextLine[49];
                     
-                    if(!Diverted.equals("")&&!Diverted.equals("0"))diverted.setProperty("Diverted", Integer.parseInt(Diverted));
+                    if(!Diverted.equals("")&&!Diverted.equals("0")){
+                        
+                        Node diverted = graphDb.createNode(NodeType.Diverted);                        
+                        Relationship diverted_by = flight.createRelationshipTo(diverted, RelationType.Diverted_by);
+                        diverted.setProperty("Diverted", Integer.parseInt(Diverted));
+                    }
                      
                     String CRSElapsedTime = nextLine[50];
                     String ActualElapsedTime = nextLine[51];
@@ -256,11 +260,17 @@ public class BuildGraph {
                     if(!Distance.equals("")&&!Distance.equals("0"))flight.setProperty("Distance", Integer.parseInt(Distance));
                     if(!DistanceGroup.equals("")&&!DistanceGroup.equals("0"))flight.setProperty("DistanceGroup", Integer.parseInt(DistanceGroup));
                     
-                    String CarrierDelay =(nextLine[56]+"");
-                    String WeatherDelay =(nextLine[57]);
+                    String CarrierDelay = (nextLine[56]+"");
+                    String WeatherDelay = (nextLine[57]);
                     String NASDelay =(nextLine[58]);
                     String SecurityDelay =(nextLine[59]);
                     String LateAircraftDelay =(nextLine[60]);
+                    
+                    if(!Distance.equals("")&&!Distance.equals("0"))flight.setProperty("Distance", Integer.parseInt(Distance));
+                    else if(!Distance.equals("")&&!Distance.equals("0"))flight.setProperty("Distance", Integer.parseInt(Distance));
+                    else if(!Distance.equals("")&&!Distance.equals("0"))flight.setProperty("Distance", Integer.parseInt(Distance));
+                    else if(!Distance.equals("")&&!Distance.equals("0"))flight.setProperty("Distance", Integer.parseInt(Distance));
+                    else if(!Distance.equals("")&&!Distance.equals("0"))flight.setProperty("Distance", Integer.parseInt(Distance));
                     
                     int iCarrierDelay, iWeatherDelay, iNASDelay, iSecurityDelay, iLateAircraftDelay;
                     
@@ -269,31 +279,35 @@ public class BuildGraph {
                     if(NASDelay.equals("")){iNASDelay = 0;}                     else{iNASDelay = Integer.parseInt(NASDelay);}
                     if(SecurityDelay.equals("")){iSecurityDelay = 0;}           else{iSecurityDelay = Integer.parseInt(SecurityDelay);}
                     if(LateAircraftDelay.equals("")){iLateAircraftDelay = 0;}   else{iLateAircraftDelay = Integer.parseInt(LateAircraftDelay);}
-                                        
-                    if(iCarrierDelay>0)
+                    
+                    if(iCarrierDelay!=0||iWeatherDelay!=0||iNASDelay!=0||iSecurityDelay!=0||iLateAircraftDelay!=0)
                     {
-                        cause.setProperty("Cause", "CarrierDelay");
-                        delayed_by.setProperty("Minutes", iCarrierDelay);
-                    }
-                    else if(iWeatherDelay>0)
-                    {
-                        cause.setProperty("Cause", "WeatherDelay");
-                        delayed_by.setProperty("Minutes", iWeatherDelay);
-                    }
-                    else if(iNASDelay>0)
-                    {
-                        cause.setProperty("Cause", "NASDelay");
-                        delayed_by.setProperty("Minutes", NASDelay);
-                    }
-                    else if(iSecurityDelay>0)
-                    {
-                        cause.setProperty("Cause", "SecurityDelay");
-                        delayed_by.setProperty("Minutes", SecurityDelay);
-                    }
-                    else if(iLateAircraftDelay>0)
-                    {
-                        cause.setProperty("Cause", "LateAircraftDelay");
-                        delayed_by.setProperty("Minutes", LateAircraftDelay);
+                    
+                        if(iCarrierDelay>0)
+                        {
+                            cause.setProperty("Cause", "CarrierDelay");
+                            cause.setProperty("Minutes", iCarrierDelay);
+                        }
+                        if(iWeatherDelay>0)
+                        {
+                            cause.setProperty("Cause", "WeatherDelay");
+                            cause.setProperty("Minutes", iWeatherDelay);
+                        }
+                        if(iNASDelay>0)
+                        {
+                            cause.setProperty("Cause", "NASDelay");
+                            cause.setProperty("Minutes", NASDelay);
+                        }
+                        if(iSecurityDelay>0)
+                        {
+                            cause.setProperty("Cause", "SecurityDelay");
+                            cause.setProperty("Minutes", SecurityDelay);
+                        }
+                        if(iLateAircraftDelay>0)
+                        {
+                            cause.setProperty("Cause", "LateAircraftDelay");
+                            cause.setProperty("Minutes", LateAircraftDelay);
+                        }
                     }
                     
                     String FirstDepTime = nextLine[61];
@@ -322,10 +336,11 @@ public class BuildGraph {
                     tx.success();
                 }   
                 
-                System.out.println("Read database and wrote to Neo4j");
+                //System.out.println("Read database and wrote to Neo4j");
                 count++;
             }
             graphDb.shutdown();
+            System.out.println("Read from file to database Succesful");
         } 
         catch (FileNotFoundException e) 
         {
