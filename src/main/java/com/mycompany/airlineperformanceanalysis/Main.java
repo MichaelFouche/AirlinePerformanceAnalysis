@@ -5,7 +5,9 @@
  */
 package com.mycompany.airlineperformanceanalysis;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import org.neo4j.cypher.ExecutionEngine;
 import org.neo4j.cypher.ExecutionResult;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -22,12 +24,56 @@ public class Main {
     
     public static void main(String[] args) throws IOException
     {
+        BufferedReader br;
+        int selectedOption;
+        br = new BufferedReader(new InputStreamReader(System.in));
         BuildGraph bg = new BuildGraph();
-        //bg.clearDatabase();
-        //bg.readTheFile();
-        
         Main m = new Main();
-        m.readGraph();
+        m.showMainMenu() ;
+        try {
+            
+            selectedOption = Integer.parseInt(br.readLine());
+            while(selectedOption!=4)
+            {
+                switch (selectedOption) 
+                {
+                    case 1:
+                        bg.clearDatabase();
+                        break;
+                    case 2:                    
+                        bg.readTheFile();
+                        break;
+                    case 3:
+                        m.readGraph();
+                        break;
+                }
+                m.showMainMenu() ;
+                selectedOption = Integer.parseInt(br.readLine());
+            }
+        } catch (IOException ioe) {
+            System.out.println("IO error trying to read your input." + ioe);
+            System.exit(1);
+        }
+        
+        //
+        
+        
+    }
+    
+     public void showMainMenu() 
+     {
+        System.out.println("");
+        System.out.println("Main Menu");
+        System.out.println("---------------------------");
+        System.out.println("1. Clear Database");
+        System.out.println("2. Read From file");
+        System.out.println("3. Read From database");
+        System.out.println("4. Exit the program");
+        System.out.println("----------------------------");
+        System.out.println("");
+        System.out.print("Please select an option from 1-4");
+        System.out.println("");
+        System.out.println("");
     }
     
     public void readGraph()
