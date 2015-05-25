@@ -25,7 +25,7 @@ public class Main {
     
     public static void main(String[] args) throws IOException
     {
-        int amountOfRecods = 4000;
+        int amountOfRecods = 50000;
         BufferedReader br;
         int selectedOption;
         br = new BufferedReader(new InputStreamReader(System.in));
